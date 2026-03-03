@@ -1,5 +1,6 @@
 import express from 'express'
 import IndexRoute from "../router/index.router.js"
+
 export default class Server{
 
     constructor(){
