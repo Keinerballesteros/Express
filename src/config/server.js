@@ -13,7 +13,7 @@ export default class Server{
     }
     
     middleware(){
-
+        this.app.use(express.json())
     }
 
     route(){
