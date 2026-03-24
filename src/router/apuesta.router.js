@@ -18,14 +18,11 @@ router.get("/get", apuestaController.getApuesta)
 router.get("/update", apuestaController.update)
 
 
-
 router.get('/hset', apuestaController.hset)
 
 router.get('/delete', apuestaController.deleteTwo)
 
 
-router.get('/getHash', apuestaController.getHash
-   
-)
+router.get('/getHash', apuestaController.getHash)
 
 export default router;
