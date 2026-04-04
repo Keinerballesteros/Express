@@ -6,9 +6,10 @@ export const getUsuario = async(req,res) => {
     return res.status(200).json({"msn":"Hello getUser",data})
 }
 
-export const postUsuario = async(json) => {
-    const data = await usuariomodel.postUsuarioModelUnico(json);
-    return res.status(200).json({"msn":"Hello getUser",data})
+export const postUsuario = async(req,res) => {
+    const json = req.body;
+    const result = await usuariomodel.postUsuarioModelUnico(json);
+    res.send({data: json})
 }
 
 export const deleteUsuario = (req,res) => {
