@@ -1,68 +1,78 @@
-import modelApuesta from "../models/apuesta.model.js"
+import apuestaModel from "../models/apuesta.model.js";
+import { ObjectId } from "mongodb";
 
-export const getApuesta = async(req,res) =>{
-    const data = await redis.get('info:03578');
-    const json = JSON.parse(data)
-    console.log(json)
-    res.send(json)
-}
-
-export const save = async(req,res) =>{
-    const json = req.body;
-    console.log("*****************")
-    console.log(json)
-    console.log("**************")
-   
-
-    modelApuesta.saveApuesta(json)
-
-}
-
-export const update = async(req,res) => {
-    const edad = 20;
-    const data = await redis.get('info:03578');
-    if(!data){
-        return res.json({'success':false, 'data':[], 'msg': 'Not found'}, 404)
+export const getApuesta = async (req, res) => {
+    try {
+        const data = await apuestaModel.getApuestaModel();
+        return res.status(200).json({ "msn": "Apuestas:", data });
+    } catch (error) {
+        return res.status(500).json({ "msn": "Error al obtener apuestas", error: error.message });
     }
-    let json = JSON.parse(data);
-    json.edad = edad;
-    let a = await redis.set('info:03578', 
-        JSON.stringify(json),{
-            EX:300
+}
+
+export const getApuestaPorUsuario = async (req, res) => {
+    try {
+        const { usuarioId } = req.params;
+        const data = await apuestaModel.getApuestaPorUsuarioModel(usuarioId);
+        return res.status(200).json({ "msn": `Apuestas del usuario ${usuarioId}`, data });
+    } catch (error) {
+        return res.status(500).json({ "msn": "Error al obtener apuestas del usuario", error: error.message });
+    }
+}
+
+export const postApuesta = async (req, res) => {
+    try {
+        const apuestaData = req.body;
+        
+        //Validaciones 
+        if (!apuestaData.monto_apostado || apuestaData.monto_apostado <= 0) {
+            return res.status(400).json({ "msn": "El monto apostado debe ser mayor a 0" });
         }
-    )
-    res.send({"success": a === 'OK' , data: json, msg:a});
+        
+        if (!apuestaData.usuario_id) {
+            return res.status(400).json({ "msn": "El ID del usuario es requerido" });
+        }
+        
+        if (!apuestaData.evento_id) {
+            return res.status(400).json({ "msn": "El ID del evento es requerido" });
+        }
+        
+        if (!apuestaData.cuota_seleccionada || apuestaData.cuota_seleccionada <= 0) {
+            return res.status(400).json({ "msn": "La cuota seleccionada debe ser mayor a 0" });
+        }
+        
+        const result = await apuestaModel.postApuestaModel(apuestaData);
+        return res.status(201).json({ 
+            "msn": "Apuesta registrada exitosamente", 
+            data: apuestaData,
+            id_apuesta: result.insertedId.toString()
+        });
+    } catch (error) {
+        return res.status(500).json({ "msn": "Error al registrar apuesta", error: error.message });
+    }
 }
 
-export const hset = async(req,res) => {
-     const response = await redis.hSet('info:192197',{
-        'name' : "Keiner",
-        'lastname': "Martinez",
-        'age' :32
-    });
-
-    await redis.expire('info:192197', 300)
-    res.send(response);
-}
-
-export const deleteTwo = async(req,res) => {
-    // const data = await redis.del('info:192197')
-    const data = await redis.hDel('info:192197', 'age')
-    const response = await redis.hGetAll('info:192197')
-    res.send(response);
-}
-
-export const getHash = async (req,res) => {
-     const response = await redis.hGetAll('info:192197');
-    const ttl = await redis.ttl('info:192197')
-    res.json({success: true, data: response, ttl})
+export const actualizarEstadoApuesta = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { estado } = req.body;
+        
+        const estadosValidos = ["ganada", "perdida", "en_curso"];
+        if (!estadosValidos.includes(estado)) {
+            return res.status(400).json({ "msn": "Estado no válido. Usar: ganada, perdida o en_curso" });
+        }
+        
+        const result = await apuestaModel.actualizarEstadoApuestaModel(id, estado);
+        
+        return res.status(200).json({ "msn": `Apuesta actualizada a ${estado}`, result });
+    } catch (error) {
+        return res.status(500).json({ "msn": "Error al actualizar apuesta", error: error.message });
+    }
 }
 
 export default {
     getApuesta,
-    save_dos : save,
-    update,
-    hset,
-    deleteTwo,
-    getHash
-}
+    getApuestaPorUsuario,
+    postApuesta,
+    actualizarEstadoApuesta
+};

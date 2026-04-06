@@ -1,22 +1,56 @@
-import { getConnection } from "../services/redis.service.js"
+import { connectionTournament } from "../services/mongo.service.js";
+import { ObjectId } from "mongodb";
 
-const saveApuesta = async(json) => {
-    const redis = await getConnection()
-     let a = await redis.set('info:03578',
-         JSON.stringify(json), {
-            EX:300
-       })
-    return a;
+export const getApuestaModel = async () => {
+    const connection = await connectionTournament();
+    const result = await connection.collection("apuesta").find({}).toArray();
+    return result;
 }
 
-const getApuesta = async(req,res) =>{
-    const data = await redis.get('info:03578');
-    const json = JSON.parse(data)
-    console.log(json)
-     res.send(json)
+export const getApuestaPorUsuarioModel = async (usuarioId) => {
+    const connection = await connectionTournament();
+    const result = await connection.collection("apuesta").find({ "usuario_id": usuarioId }).toArray();
+    return result;
 }
 
-
-export default{
-    saveApuesta, getApuesta
+export const getApuestaPorEventoModel = async (eventoId) => {
+    const connection = await connectionTournament();
+    const result = await connection.collection("apuesta").find({ "evento_id": eventoId }).toArray();
+    return result;
 }
+
+export const postApuestaModel = async (apuestaData) => {
+    const connection = await connectionTournament();
+    const apuestaCollection = connection.collection("apuesta");
+    
+    const posibleGanancia = apuestaData.monto_apostado * apuestaData.cuota_seleccionada;
+    
+    const apuestaCompleta = {
+        ...apuestaData,
+        posible_ganancia: posibleGanancia,
+        fecha_apuesta: new Date(),
+        estado: "en_curso" 
+    };
+    
+    const result = await apuestaCollection.insertOne(apuestaCompleta);
+    return result;
+}
+
+export const actualizarEstadoApuestaModel = async (apuestaId, nuevoEstado) => {
+    const connection = await connectionTournament();
+    const apuestaCollection = connection.collection("apuesta");
+    
+    const result = await apuestaCollection.updateOne(
+        { _id: new ObjectId(apuestaId) },
+        { $set: { estado: nuevoEstado } }
+    );
+    return result;
+}
+
+export default {
+    getApuestaModel,
+    getApuestaPorUsuarioModel,
+    getApuestaPorEventoModel,
+    postApuestaModel,
+    actualizarEstadoApuestaModel
+};

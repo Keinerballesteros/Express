@@ -1,28 +1,14 @@
-import {Router} from "express"
-
-//import { getApuesta, save } from "../controller/apuesta.controller.js";
+import { Router } from "express";
+import express from "express";
 import apuestaController from "../controller/apuesta.controller.js";
 
 const router = Router();
 
+router.use(express.json());
 
-router.get("/apuesta", (req,res) =>{
-    res.send("Hola apuesta")
-} )
-
-router.post("/save", apuestaController.save_dos)
-    
-
-router.get("/get", apuestaController.getApuesta)
-
-router.get("/update", apuestaController.update)
-
-
-router.get('/hset', apuestaController.hset)
-
-router.get('/delete', apuestaController.deleteTwo)
-
-
-router.get('/getHash', apuestaController.getHash)
+router.get("/get", apuestaController.getApuesta);
+router.get("/get/usuario/:usuarioId", apuestaController.getApuestaPorUsuario);
+router.post("/post", apuestaController.postApuesta);
+router.put("/update/:id/estado", apuestaController.actualizarEstadoApuesta);
 
 export default router;
