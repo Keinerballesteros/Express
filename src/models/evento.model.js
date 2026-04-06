@@ -1,29 +1,28 @@
-
 import { connectionTournament } from "../services/mongo.service.js"
 
-export const getUsuarioModel = async() =>{
+export const getEventoModel = async() =>{
     const connection = await connectionTournament();
-    const result = await connection.collection("usuario").find({}).toArray();
+    const result = await connection.collection("evento").find({}).toArray();
     return result;
 }
 
-export const postUsuarioModelUnico = async(json) =>{
+export const postEventoModelUnico = async(json) =>{
     console.log(JSON.stringify(json))
     const connection = await connectionTournament();
-    const tournament = connection.collection("usuario")
+    const tournament = connection.collection("evento")
     const result = await tournament.insertOne(json)
     return result;
 }
 
-export const postUsuarioModelMultiple = async (json) =>{
+export const postEventoModelMultiple = async (json) =>{
     const connection = await connectionTournament();
-    const tournament = connection.collection("usuario")
+    const tournament = connection.collection("evento")
     const result = await tournament.insertMany(json)
     return result;
 }
 
-export default{
-    getUsuarioModel,
-    postUsuarioModelUnico,
-    postUsuarioModelMultiple
+export default {
+    getEventoModel,
+    postEventoModelUnico,
+    postEventoModelMultiple
 }

@@ -12,6 +12,12 @@ export const postUsuario = async(req,res) => {
     res.send({data: json})
 }
 
+export const postUsuarioMultiple = async(req,res) => {
+    const json = req.body;
+    const result = await usuariomodel.postUsuarioModelMultiple(json);
+    res.send({data: json})
+}
+
 export const deleteUsuario = (req,res) => {
     
 }
@@ -23,6 +29,7 @@ export const putUsuario = (req,res) => {
 export default {
     getUsuario,
     postUsuario,
+    postUsuarioMultiple,
     putUsuario,
     deleteUsuario
 }
