@@ -47,10 +47,23 @@ export const actualizarEstadoApuestaModel = async (apuestaId, nuevoEstado) => {
     return result;
 }
 
+const getEnCurso = async() => {
+    const connection = await connectionTournament();
+    const apuestaCollection = connection.collection("apuesta");
+
+    const result = apuestaCollection.find(
+        {estado: 'en_curso'},
+        {projection: {monto_apostado: 1, _id:0}}
+    ).toArray();
+
+    return result;
+}
+
 export default {
     getApuestaModel,
     getApuestaPorUsuarioModel,
     getApuestaPorEventoModel,
     postApuestaModel,
-    actualizarEstadoApuestaModel
+    actualizarEstadoApuestaModel,
+    getEnCurso
 };

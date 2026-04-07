@@ -11,4 +11,11 @@ router.get("/get/usuario/:usuarioId", apuestaController.getApuestaPorUsuario);
 router.post("/post", apuestaController.postApuesta);
 router.put("/update/:id/estado", apuestaController.actualizarEstadoApuesta);
 
+
+
+/* Consulta en curso solo deporte y posible ganacia*/
+
+router.get("/en-curso", apuestaController.getEnCurso)
+
+
 export default router;

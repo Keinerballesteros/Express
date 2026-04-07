@@ -70,9 +70,22 @@ export const actualizarEstadoApuesta = async (req, res) => {
     }
 }
 
+
+export const getEnCurso = async(req,res) =>{
+    try{
+        const result = await apuestaModel.getEnCurso();
+        res.json({data:result})
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).json({"msn": "Error interno"})
+    }
+}
+
 export default {
     getApuesta,
     getApuestaPorUsuario,
     postApuesta,
-    actualizarEstadoApuesta
+    actualizarEstadoApuesta,
+    getEnCurso
 };
