@@ -43,7 +43,8 @@ export const deleteUsuario = async(req,res) => {
 }   
 
 export const totalApostado = async(req,res) => {
-    const data = await usuariomodel.totalApostado()
+    const id = req.params
+    const data = await usuariomodel.totalApostado(id)
     return res.status(200).json({"msn":"data",data})
 }
 

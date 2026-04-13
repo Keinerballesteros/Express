@@ -13,7 +13,7 @@ router.put("/updateSaldo/:id", usuarioController.updateSaldo)
 router.get("/search/:saldo", usuarioController.searchUsuario)
 router.get("/usuarioPaisCorreo", usuarioController.usuarioPaisCorreo)
 router.delete("/delete/:id", usuarioController.deleteUsuario)
-router.get("/totalApostado", usuarioController.totalApostado)
+router.get("/totalApostado/id", usuarioController.totalApostado)
 export default router;
 
 

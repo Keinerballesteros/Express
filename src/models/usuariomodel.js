@@ -23,7 +23,7 @@ export const postUsuarioModelMultiple = async (json) =>{
     return result;
 }
 
-//Terminar la funcion de actualizar el saldo de un usuario
+//Terminar la funcion de actualizar el saldo de un usuario 
 export const updateSaldo = async (id) => {
     const connection = await connectionTournament();
     const usuario = await connection.collection("usuario").find({_id: new ObjectId(id)});
@@ -103,9 +103,9 @@ export const usuarioPaisCorreo = async() => {
         _id: { $in: usuariosIds.map(id => new ObjectId(id)) }
     }, {
         projection: { 
-            país: 1,      // Incluye país
-            correo: 1,    // Incluye correo
-            _id: 0        // Excluye el _id (opcional)
+            país: 1,      
+            correo: 1,    
+            _id: 0        
         }
     }).toArray();
     
@@ -118,8 +118,8 @@ export const usuarioPaisCorreo = async() => {
 
 export const deleteUsuarioModel = async (id) => {
     const connection = await connectionTournament();
-    const result = await connection.collection("usuario").deleteOne({_id: new ObjectId(id)});
     const apuestasEliminadas = await connection.collection("apuesta").deleteMany({usuario_id: id});
+    const result = await connection.collection("usuario").deleteOne({_id: new ObjectId(id)});
      return {
         msn: `Usuario con ID ${id} eliminado`,
         usuario_eliminado: result,
@@ -128,12 +128,13 @@ export const deleteUsuarioModel = async (id) => {
     };
 }
 
-export const totalApostado = async() => {
+export const totalApostado = async(id) => {
     const connection = await connectionTournament();
+    const id_mongo = new ObjectId(id)
     const result = await connection.collection("apuesta").aggregate([
         {
             $group: {
-                _id: null,
+                _id: id_mongo,
                 total: { $sum: "$monto" }
             }
         }

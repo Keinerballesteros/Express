@@ -10,6 +10,7 @@ router.post("/postMultiple", eventoController.postEventoMultiple)
 router.get("/search/:evento", eventoController.SearchEvento)
 router.get("/eventoCuota", eventoController.eventoCuota)
 router.put("/modificarCuota/:id", eventoController.modificarCuota)
-router.delete("/delete", eventoController.deleteEvento)
+router.delete("/delete", eventoController.deleteEventoMultiple)
+router.delete("/deleteEvento/:id",eventoController.deleteEvento)
 
 export default router;
