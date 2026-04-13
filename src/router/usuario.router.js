@@ -10,8 +10,10 @@ router.post("/post",usuarioController.postUsuario)
 router.post("/postMultiple", usuarioController.postUsuarioMultiple)
 router.delete("/",usuarioController.deleteUsuario)
 router.put("/updateSaldo/:id", usuarioController.updateSaldo)
-
-
+router.get("/search/:saldo", usuarioController.searchUsuario)
+router.get("/usuarioPaisCorreo", usuarioController.usuarioPaisCorreo)
+router.delete("/delete/:id", usuarioController.deleteUsuario)
+router.get("/totalApostado", usuarioController.totalApostado)
 export default router;
 
 

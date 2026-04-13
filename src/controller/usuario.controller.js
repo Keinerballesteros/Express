@@ -18,9 +18,6 @@ export const postUsuarioMultiple = async(req,res) => {
     res.send({data: json})
 }
 
-export const deleteUsuario = (req,res) => {
-    
-}
 
 export const updateSaldo = (req,res) => {
     const {id} = req.param
@@ -28,10 +25,36 @@ export const updateSaldo = (req,res) => {
      return res.status(200).json({ "msn": "Saldo de usuario actualizado ", result })
 }   
 
+export const searchUsuario = async(req,res) => {
+    const saldo = req.params.saldo;
+    const data = await usuariomodel.searchUsuarioModel(saldo)
+    return res.status(200).json({"msn":"data",data})
+}
+
+export const usuarioPaisCorreo = async(req,res) => {
+    const data = await usuariomodel.usuarioPaisCorreo()
+    return res.status(200).json({"msn":"data",data})
+}
+
+export const deleteUsuario = async(req,res) => {
+    const {id} = req.params;
+    const result = await usuariomodel.deleteUsuarioModel(id);
+     return res.status(200).json({ "msn": `Usuario con ID ${id} eliminado`, result })
+}   
+
+export const totalApostado = async(req,res) => {
+    const data = await usuariomodel.totalApostado()
+    return res.status(200).json({"msn":"data",data})
+}
+
 export default {
     getUsuario,
     postUsuario,
     postUsuarioMultiple,
     updateSaldo,
-    deleteUsuario
+    deleteUsuario,
+    searchUsuario,
+    usuarioPaisCorreo,
+    deleteUsuario,
+    totalApostado
 }
