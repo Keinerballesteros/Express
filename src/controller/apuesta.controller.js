@@ -52,6 +52,24 @@ export const postApuesta = async (req, res) => {
     }
 }
 
+export const postApuestaMultiple = async (req, res) => {
+    try {
+        const apuestasData = req.body; // Esperamos un array de apuestas
+        if (!Array.isArray(apuestasData) || apuestasData.length === 0) {
+            return res.status(400).json({ "msn": "Se requiere un array de apuestas no vacío" });
+        }
+        const result = await apuestaModel.postApuestaMultiple(apuestasData);
+        return res.status(201).json({ 
+            "msn": "Apuestas registradas exitosamente",     
+            data: apuestasData,
+            ids_apuestas: result.insertedIds
+        });
+    } catch (error) {
+        return res.status(500).json({ "msn": "Error al registrar apuestas", error: error.message });
+    }
+}
+
+
 export const actualizarEstadoApuesta = async (req, res) => {
     try {
         const { id } = req.params;
@@ -87,5 +105,6 @@ export default {
     getApuestaPorUsuario,
     postApuesta,
     actualizarEstadoApuesta,
-    getEnCurso
+    getEnCurso,
+    postApuestaMultiple
 };

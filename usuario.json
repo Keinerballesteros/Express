@@ -1,0 +1,32 @@
+[
+  {
+    "nombre": "Carlos López",
+    "correo": "carlos.lopez@email.com",
+    "saldo": 150.75,
+    "país": "Colombia"
+  },
+  {
+    "nombre": "María García",
+    "correo": "maria.garcia@email.com",
+    "saldo": 2500,
+    "país": "México"
+  },
+  {
+    "nombre": "Javier Rodríguez",
+    "correo": "javier.rodriguez@email.com",
+    "saldo": 75.5,
+    "país": "Argentina"
+  },
+  {
+    "nombre": "Laura Fernández",
+    "correo": "laura.fernandez@email.com",
+    "saldo": 500.25,
+    "país": "Chile"
+  },
+  {
+    "nombre": "Pedro Sánchez",
+    "correo": "pedro.sanchez@email.com",
+    "saldo": 1200,
+    "país": "España"
+  }
+]

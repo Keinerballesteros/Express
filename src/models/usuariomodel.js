@@ -1,6 +1,7 @@
 
 import { ObjectId } from "mongodb";
 import { connectionTournament } from "../services/mongo.service.js"
+import { deleteApuestaModel } from "./apuesta.model.js";
 
 export const getUsuarioModel = async() =>{
     const connection = await connectionTournament();
@@ -72,9 +73,8 @@ export const searchUsuarioModel = async (saldo) => {
 
 export const usuarioPaisCorreo = async() => {
     const connection = await connectionTournament();
-    
     const eventoBaloncesto = await connection.collection("evento").findOne(
-        { deporte: "Fútbol" }, 
+        { deporte: "Baloncesto" }, 
         { projection: { _id: 1 } }  
     );
     
@@ -118,7 +118,7 @@ export const usuarioPaisCorreo = async() => {
 
 export const deleteUsuarioModel = async (id) => {
     const connection = await connectionTournament();
-    const apuestasEliminadas = await connection.collection("apuesta").deleteMany({usuario_id: id});
+    const apuestasEliminadas = deleteApuestaModel(id);
     const result = await connection.collection("usuario").deleteOne({_id: new ObjectId(id)});
      return {
         msn: `Usuario con ID ${id} eliminado`,

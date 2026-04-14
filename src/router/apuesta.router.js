@@ -9,6 +9,7 @@ router.use(express.json());
 router.get("/get", apuestaController.getApuesta);
 router.get("/get/usuario/:usuarioId", apuestaController.getApuestaPorUsuario);
 router.post("/post", apuestaController.postApuesta);
+router.post("/postMultiple", apuestaController.postApuestaMultiple);
 router.put("/update/:id/estado", apuestaController.actualizarEstadoApuesta);
 
 

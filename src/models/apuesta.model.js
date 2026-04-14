@@ -36,6 +36,22 @@ export const postApuestaModel = async (apuestaData) => {
     return result;
 }
 
+export const postApuestaMultiple = async (apuestasData) => {
+    const connection = await connectionTournament();
+    const apuestaCollection = connection.collection("apuesta"); 
+    const apuestasCompleta = apuestasData.map(apuestaData => {
+        const posibleGanancia = apuestaData.monto_apostado * apuestaData.cuota_seleccionada;
+        return {
+            ...apuestaData,
+            posible_ganancia: posibleGanancia,
+            fecha_apuesta: new Date(),
+            estado: "en_curso" 
+        };
+    });
+    const result = await apuestaCollection.insertMany(apuestasCompleta);
+    return result;
+}
+
 export const actualizarEstadoApuestaModel = async (apuestaId, nuevoEstado) => {
     const connection = await connectionTournament();
     const apuestaCollection = connection.collection("apuesta");
@@ -47,7 +63,7 @@ export const actualizarEstadoApuestaModel = async (apuestaId, nuevoEstado) => {
     return result;
 }
 
-const getEnCurso = async() => {
+export const getEnCurso = async() => {
     const connection = await connectionTournament();
     const apuestaCollection = connection.collection("apuesta");
 
@@ -59,11 +75,20 @@ const getEnCurso = async() => {
     return result;
 }
 
+export const deleteApuestaModel = async (apuestaId) => {
+    const connection = await connectionTournament();
+    const apuestaCollection = connection.collection("apuesta");
+    const result = await apuestaCollection.deleteOne({ _id: new ObjectId(apuestaId) });
+    return result;
+} 
+
 export default {
     getApuestaModel,
     getApuestaPorUsuarioModel,
     getApuestaPorEventoModel,
     postApuestaModel,
     actualizarEstadoApuestaModel,
-    getEnCurso
+    getEnCurso,
+    deleteApuestaModel,
+    postApuestaMultiple
 };
