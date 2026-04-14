@@ -11,7 +11,7 @@ router.get("/get/usuario/:usuarioId", apuestaController.getApuestaPorUsuario);
 router.post("/post", apuestaController.postApuesta);
 router.post("/postMultiple", apuestaController.postApuestaMultiple);
 router.put("/update/:id/estado", apuestaController.actualizarEstadoApuesta);
-
+router.get("/por-deporte/:nombre", apuestaController.porDeporte)
 
 
 /* Consulta en curso solo deporte y posible ganacia*/

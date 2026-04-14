@@ -82,6 +82,37 @@ export const deleteApuestaModel = async (apuestaId) => {
     return result;
 } 
 
+export const porDeporte = async(nombre) => {
+    const connection = await connectionTournament();
+    const apuestaCollection = connection.collection("apuesta");
+    const data = await apuestaCollection.aggregate(
+        [   
+            {
+            $addFields: {
+                evento_id: { $toObjectId: "$evento_id" }
+            }
+            },
+            {
+                $lookup:{
+                    from: 'evento', //de donde voy a sacar los datos
+                    localField: 'evento_id', //en mi collection cual campo relaciono
+                    foreignField: '_id', //campo externo
+                    as: 'evento'
+                }
+            },
+            {
+                $unwind: "$evento"
+            },
+            {
+                $match: {
+                    "evento.deporte": nombre
+                }
+            }
+        ]
+    ).toArray()
+    return data;
+}
+
 export default {
     getApuestaModel,
     getApuestaPorUsuarioModel,
@@ -90,5 +121,6 @@ export default {
     actualizarEstadoApuestaModel,
     getEnCurso,
     deleteApuestaModel,
-    postApuestaMultiple
+    postApuestaMultiple,
+    porDeporte
 };

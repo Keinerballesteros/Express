@@ -100,11 +100,18 @@ export const getEnCurso = async(req,res) =>{
     }
 }
 
+export const porDeporte = async(req,res) => {
+    const { nombre} = req.params;
+    const response = await apuestaModel.porDeporte(nombre)
+    return res.send({response});
+}
+
 export default {
     getApuesta,
     getApuestaPorUsuario,
     postApuesta,
     actualizarEstadoApuesta,
     getEnCurso,
-    postApuestaMultiple
+    postApuestaMultiple,
+    porDeporte
 };
