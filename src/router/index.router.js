@@ -9,4 +9,5 @@ const router = Router();
 router.use( "/usuario", UsuarioRouter);
 router.use("/evento", EventoRouter)
 router.use("/apuesta", ApuestaRouter)
+
 export default router;
