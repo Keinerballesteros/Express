@@ -107,7 +107,30 @@ export const porDeporte = async(nombre) => {
                 $match: {
                     "evento.deporte": nombre
                 }
+            },
+            {
+                $addFields: {
+                usuario_id: { $toObjectId: "$usuario_id" }
             }
+            },
+            {
+                $lookup:{
+                    from: 'usuario', //de donde voy a sacar los datos
+                    localField: 'usuario_id', //en mi collection cual campo relaciono
+                    foreignField: '_id', //campo externo
+                    as: 'usuario'
+                }
+            },
+            {
+                $unwind: "$evento"
+            },
+            {
+                $project: {
+                    correo: "$usuario.correo",
+                    nombre : "$usuario.nombre"
+                }
+            }
+
         ]
     ).toArray()
     return data;

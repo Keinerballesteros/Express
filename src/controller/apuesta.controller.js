@@ -106,6 +106,7 @@ export const porDeporte = async(req,res) => {
     return res.send({response});
 }
 
+
 export default {
     getApuesta,
     getApuestaPorUsuario,
