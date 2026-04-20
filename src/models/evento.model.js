@@ -69,6 +69,33 @@ export const deleteEventoModel = async () => {
     };
 }
 
+export const promedioCuota = async () => {
+    const collection = (await getCollection()); 
+    const result = await collection.aggregate([
+        {
+            $project: {
+                deporte: 1,
+                fecha: 1,
+                cuota_local: 1,
+                cuota_visitante: 1,
+                promedioCuota: {
+                    $round: [
+                        {
+                            $divide: [
+                                { $add: ["$cuota_local", "$cuota_visitante"] },
+                                2
+                            ]
+                        },
+                        2 
+                    ]
+                }
+            }
+        }
+    ]).toArray();
+    
+    return result;
+}
+
 export default {
     getEventoModel,
     postEventoModelUnico,
@@ -77,5 +104,6 @@ export default {
     eventoCuota,
     modificarCuota,
     deleteEvento,
-    deleteEventoModel
+    deleteEventoModel,
+    promedioCuota
 }

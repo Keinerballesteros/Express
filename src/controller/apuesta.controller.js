@@ -106,6 +106,11 @@ export const porDeporte = async(req,res) => {
     return res.send({response});
 }
 
+export const getLookup = async(req,res) => {
+    const response = await apuestaModel.getLookup();
+    return res.send({response});
+}
+
 
 export default {
     getApuesta,
@@ -114,5 +119,6 @@ export default {
     actualizarEstadoApuesta,
     getEnCurso,
     postApuestaMultiple,
-    porDeporte
+    porDeporte,
+    getLookup
 };

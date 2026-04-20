@@ -136,6 +136,58 @@ export const porDeporte = async(nombre) => {
     return data;
 }
 
+export const getLookup = async() => {
+    const connection = await connectionTournament();
+    const apuestaCollection = connection.collection("apuesta");
+    const data = await apuestaCollection.aggregate(
+        [   
+            {
+                $addFields: {
+                    evento_id: { $toObjectId: "$evento_id" }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'evento',
+                    localField: 'evento_id',
+                    foreignField: '_id',            
+                    as: 'evento'
+                }
+            },
+            {
+                $unwind: "$evento"
+            },  
+            {
+                $addFields: {
+                    usuario_id: { $toObjectId: "$usuario_id" }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'usuario',
+                    localField: 'usuario_id',
+                    foreignField: '_id',
+                    as: 'usuario'
+                }
+            },
+            {
+                $unwind: "$usuario"
+            },
+            {
+                $project: {
+                    nombre: "$usuario.nombre",
+                    deporte: "$evento.deporte",
+                    monto_apostado: "$monto_apostado",  
+                    posible_ganancia: "$posible_ganancia", 
+                    estado: "$estado"  
+                }
+            }
+        ]
+    ).toArray();
+    return data;
+}
+    
+
 export default {
     getApuestaModel,
     getApuestaPorUsuarioModel,
@@ -145,5 +197,6 @@ export default {
     getEnCurso,
     deleteApuestaModel,
     postApuestaMultiple,
-    porDeporte
+    porDeporte,
+    getLookup
 };

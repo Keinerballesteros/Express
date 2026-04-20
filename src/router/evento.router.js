@@ -12,5 +12,5 @@ router.get("/eventoCuota", eventoController.eventoCuota)
 router.put("/modificarCuota/:id", eventoController.modificarCuota)
 router.delete("/delete", eventoController.deleteEventoMultiple)
 router.delete("/deleteEvento/:id",eventoController.deleteEvento)
-
+router.get("/promedioCuota", eventoController.promedioCuota)
 export default router;

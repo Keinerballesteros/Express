@@ -52,6 +52,11 @@ export const deleteEvento = async(req,res) => {
         }
 }
 
+export const promedioCuota = async(req,res) => {
+    const result = await eventoModel.promedioCuota();
+    return res.status(200).json({msn: "Promedio de cuotas", result})
+}
+
 
 export default{
     getEvento,
@@ -61,5 +66,6 @@ export default{
     eventoCuota,
     modificarCuota,
     deleteEventoMultiple,
-    deleteEvento
+    deleteEvento,
+    promedioCuota
 }
