@@ -1,2 +1,2 @@
 
-export const EVENTO_COLLECTION = "evento"
+export const EVENTO_COLLECTION = "eventos"

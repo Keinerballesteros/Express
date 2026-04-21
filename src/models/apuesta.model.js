@@ -1,27 +1,28 @@
 import { connectionTournament } from "../services/mongo.service.js";
 import { ObjectId } from "mongodb";
+import { APUESTA_COLLECTION} from '../constants/apuesta.const.js'
 
 export const getApuestaModel = async () => {
     const connection = await connectionTournament();
-    const result = await connection.collection("apuesta").find({}).toArray();
+    const result = await connection.collection(APUESTA_COLLECTION).find({}).toArray();
     return result;
 }
 
 export const getApuestaPorUsuarioModel = async (usuarioId) => {
     const connection = await connectionTournament();
-    const result = await connection.collection("apuesta").find({ "usuario_id": usuarioId }).toArray();
+    const result = await connection.collection(APUESTA_COLLECTION).find({ "usuario_id": usuarioId }).toArray();
     return result;
 }
 
 export const getApuestaPorEventoModel = async (eventoId) => {
     const connection = await connectionTournament();
-    const result = await connection.collection("apuesta").find({ "evento_id": eventoId }).toArray();
+    const result = await connection.collection(APUESTA_COLLECTION).find({ "evento_id": eventoId }).toArray();
     return result;
 }
 
 export const postApuestaModel = async (apuestaData) => {
     const connection = await connectionTournament();
-    const apuestaCollection = connection.collection("apuesta");
+    const apuestaCollection = connection.collection(APUESTA_COLLECTION);
     
     const posibleGanancia = apuestaData.monto_apostado * apuestaData.cuota_seleccionada;
     
@@ -38,7 +39,7 @@ export const postApuestaModel = async (apuestaData) => {
 
 export const postApuestaMultiple = async (apuestasData) => {
     const connection = await connectionTournament();
-    const apuestaCollection = connection.collection("apuesta"); 
+    const apuestaCollection = connection.collection(APUESTA_COLLECTION); 
     const apuestasCompleta = apuestasData.map(apuestaData => {
         const posibleGanancia = apuestaData.monto_apostado * apuestaData.cuota_seleccionada;
         return {
@@ -54,7 +55,7 @@ export const postApuestaMultiple = async (apuestasData) => {
 
 export const actualizarEstadoApuestaModel = async (apuestaId, nuevoEstado) => {
     const connection = await connectionTournament();
-    const apuestaCollection = connection.collection("apuesta");
+    const apuestaCollection = connection.collection(APUESTA_COLLECTION);
     
     const result = await apuestaCollection.updateOne(
         { _id: new ObjectId(apuestaId) },
@@ -65,7 +66,7 @@ export const actualizarEstadoApuestaModel = async (apuestaId, nuevoEstado) => {
 
 export const getEnCurso = async() => {
     const connection = await connectionTournament();
-    const apuestaCollection = connection.collection("apuesta");
+    const apuestaCollection = connection.collection(APUESTA_COLLECTION);
 
     const result = apuestaCollection.find(
         {estado: 'en_curso'},
@@ -77,14 +78,14 @@ export const getEnCurso = async() => {
 
 export const deleteApuestaModel = async (apuestaId) => {
     const connection = await connectionTournament();
-    const apuestaCollection = connection.collection("apuesta");
+    const apuestaCollection = connection.collection(APUESTA_COLLECTION);
     const result = await apuestaCollection.deleteOne({ _id: new ObjectId(apuestaId) });
     return result;
 } 
 
 export const porDeporte = async(nombre) => {
     const connection = await connectionTournament();
-    const apuestaCollection = connection.collection("apuesta");
+    const apuestaCollection = connection.collection(APUESTA_COLLECTION);
     const data = await apuestaCollection.aggregate(
         [   
             {
@@ -94,7 +95,7 @@ export const porDeporte = async(nombre) => {
             },
             {
                 $lookup:{
-                    from: 'evento', //de donde voy a sacar los datos
+                    from: 'eventos', //de donde voy a sacar los datos
                     localField: 'evento_id', //en mi collection cual campo relaciono
                     foreignField: '_id', //campo externo
                     as: 'evento'
@@ -115,7 +116,7 @@ export const porDeporte = async(nombre) => {
             },
             {
                 $lookup:{
-                    from: 'usuario', //de donde voy a sacar los datos
+                    from: 'usuarios', //de donde voy a sacar los datos
                     localField: 'usuario_id', //en mi collection cual campo relaciono
                     foreignField: '_id', //campo externo
                     as: 'usuario'
@@ -138,7 +139,7 @@ export const porDeporte = async(nombre) => {
 
 export const getLookup = async() => {
     const connection = await connectionTournament();
-    const apuestaCollection = connection.collection("apuesta");
+    const apuestaCollection = connection.collection(APUESTA_COLLECTION);
     const data = await apuestaCollection.aggregate(
         [   
             {
@@ -148,7 +149,7 @@ export const getLookup = async() => {
             },
             {
                 $lookup: {
-                    from: 'evento',
+                    from: 'eventos',
                     localField: 'evento_id',
                     foreignField: '_id',            
                     as: 'evento'
@@ -164,7 +165,7 @@ export const getLookup = async() => {
             },
             {
                 $lookup: {
-                    from: 'usuario',
+                    from: 'usuarios',
                     localField: 'usuario_id',
                     foreignField: '_id',
                     as: 'usuario'

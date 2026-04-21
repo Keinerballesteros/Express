@@ -2,24 +2,27 @@
 import { ObjectId } from "mongodb";
 import { connectionTournament } from "../services/mongo.service.js"
 import { deleteApuestaModel } from "./apuesta.model.js";
+import { USUARIO_COLLECTION } from "../constants/usuario.const.js";
+import { APUESTA_COLLECTION} from '../constants/apuesta.const.js';
+import { EVENTO_COLLECTION } from "../constants/evento.const.js";
 
 export const getUsuarioModel = async() =>{
     const connection = await connectionTournament();
-    const result = await connection.collection("usuario").find({}).toArray();
+    const result = await connection.collection(USUARIO_COLLECTION).find({}).toArray();
     return result;
 }
 
 export const postUsuarioModelUnico = async(json) =>{
     console.log(JSON.stringify(json))
     const connection = await connectionTournament();
-    const tournament = connection.collection("usuario")
+    const tournament = connection.collection(USUARIO_COLLECTION)
     const result = await tournament.insertOne(json)
     return result;
 }
 
 export const postUsuarioModelMultiple = async (json) =>{
     const connection = await connectionTournament();
-    const tournament = connection.collection("usuario")
+    const tournament = connection.collection(USUARIO_COLLECTION)
     const result = await tournament.insertMany(json)
     return result;
 }
@@ -27,13 +30,13 @@ export const postUsuarioModelMultiple = async (json) =>{
 //Terminar la funcion de actualizar el saldo de un usuario 
 export const updateSaldo = async (id) => {
     const connection = await connectionTournament();
-    const usuario = await connection.collection("usuario").find({_id: new ObjectId(id)});
+    const usuario = await connection.collection(USUARIO_COLLECTION).find({_id: new ObjectId(id)});
 
     if (!usuario) {
         throw new Error("Usuario no encontrado");
     }
 
-    const apuestasGanadas = await connection.collection("apuesta").find({usuario_id: new ObjectId(id), estado :"ganada"}).toArray();
+    const apuestasGanadas = await connection.collection(APUESTA_COLLECTION).find({usuario_id: new ObjectId(id), estado :"ganada"}).toArray();
 
     if (apuestasGanadas.length === 0) {
         return {
@@ -51,7 +54,7 @@ export const updateSaldo = async (id) => {
 
     const nuevoSaldo = usuario.saldo + gananciasTotales;
 
-    await connection.collection("usuario").updateOne({ 
+    await connection.collection(USUARIO_COLLECTION).updateOne({ 
         _id: new ObjectId(id) }, { 
         $set: { saldo: nuevoSaldo }
     })
@@ -67,13 +70,13 @@ export const updateSaldo = async (id) => {
 
 export const searchUsuarioModel = async (saldo) => {
     const connection = await connectionTournament();
-    const result = await connection.collection("usuario").find({saldo: { $gt: parseFloat(saldo)}}).toArray();
+    const result = await connection.collection(USUARIO_COLLECTION).find({saldo: { $gt: parseFloat(saldo)}}).toArray();
     return result;
 }
 
 export const usuarioPaisCorreo = async() => {
     const connection = await connectionTournament();
-    const eventoBaloncesto = await connection.collection("evento").findOne(
+    const eventoBaloncesto = await connection.collection(EVENTO_COLLECTION).findOne(
         { deporte: "Baloncesto" }, 
         { projection: { _id: 1 } }  
     );
@@ -85,7 +88,7 @@ export const usuarioPaisCorreo = async() => {
         };
     }
     
-    const apuestas = await connection.collection("apuesta").find({
+    const apuestas = await connection.collection(APUESTA_COLLECTION).find({
         evento_id: eventoBaloncesto._id.toString()  
     }).toArray();
     
@@ -99,7 +102,7 @@ export const usuarioPaisCorreo = async() => {
     
     const usuariosIds = [...new Set(apuestas.map(apuesta => apuesta.usuario_id))];
     
-    const usuarios = await connection.collection("usuario").find({
+    const usuarios = await connection.collection(USUARIO_COLLECTION).find({
         _id: { $in: usuariosIds.map(id => new ObjectId(id)) }
     }, {
         projection: { 
@@ -119,7 +122,7 @@ export const usuarioPaisCorreo = async() => {
 export const deleteUsuarioModel = async (id) => {
     const connection = await connectionTournament();
     const apuestasEliminadas = deleteApuestaModel(id);
-    const result = await connection.collection("usuario").deleteOne({_id: new ObjectId(id)});
+    const result = await connection.collection(USUARIO_COLLECTION).deleteOne({_id: new ObjectId(id)});
      return {
         msn: `Usuario con ID ${id} eliminado`,
         usuario_eliminado: result,
@@ -131,7 +134,7 @@ export const deleteUsuarioModel = async (id) => {
 export const totalApostado = async(id) => {
     const connection = await connectionTournament();
     const id_mongo = new ObjectId(id)
-    const result = await connection.collection("apuesta").aggregate([
+    const result = await connection.collection(APUESTA_COLLECTION).aggregate([
         {
             $group: {
                 _id: id_mongo,
