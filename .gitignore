@@ -1,0 +1,8 @@
+###> MODULES <###
+/node_modules/
+
+###> EDITORES<###
+.vscode
+
+##> ENVIRONMENTS <###
+.env

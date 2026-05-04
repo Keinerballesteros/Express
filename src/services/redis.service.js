@@ -1,7 +1,9 @@
 import { createClient } from "redis";
+import { getEnv } from "../config/default";
+
 
 export const getConnection = async() => {
-    const redis = createClient({ url: 'redis://localhost:6379'});
+    const redis = createClient({ url: getEnv('redisUrl')});
     await redis.connect();
     return redis;
 }

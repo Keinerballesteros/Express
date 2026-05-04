@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken"
+import { getEnv } from "../config/default.js"
 
 export const generateToken = (data) => {
     return jwt.sign({
@@ -7,5 +8,5 @@ export const generateToken = (data) => {
             'role' : 'administrador',
             'usuario' : data.username
         }
-    }, 'secreto_exemplo_changeme')
+    }, `${getEnv('passwordSecret')}`)
 }

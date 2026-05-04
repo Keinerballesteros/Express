@@ -19,7 +19,7 @@ export const verifiyToken = (req,res,next) => {
         })
     }
 
-    jwt.verify(tokenSplit[1], 'secreto_exemplo_changeme', (err, decode) => {
+    jwt.verify(tokenSplit[1], `${getEnv('passwordSecret')}`, (err, decode) => {
         console.log(err)
         if(err){
             
