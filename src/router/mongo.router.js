@@ -53,6 +53,28 @@ router.post("/savetournament", async (req,res) =>{
     res.json(result)
 }) 
 
+router.post("/savePersona", async (req,res) =>{
+    const db = await connection();
+    try{
+    const persona = db.collection("persona")
+    console.log(req.body)
+    const result = await persona.insertOne(req.body)
+    res.json(result)
+    }
+    catch(error){
+        if(error.code === 121){
+            return res.status(400).json({
+                msn: "Error de Validación",
+                error: error.errInfo
+            })
+        }
+        return res.status(500).json({
+            msn: 'Error interno del servidor'
+        })
+    }
+    
+}) 
+
 router.post("/savetorneos", async (req,res) =>{
     const db = await connection();
     const tournament = db.collection("tournament")
